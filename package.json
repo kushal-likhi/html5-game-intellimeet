@@ -3,16 +3,13 @@
     "version": "0.0.1",
     "private": true,
     "scripts": {
-        "start": "node app.js",
+        "start": "node server.js",
         "test": "./node_modules/.bin/mocha tests/integration"
     },
     "dependencies": {
-        "send": "*",
+        "connect": "*",
         "request": "2.33.0",
         "colors": "0.6.2",
         "mocha": "1.17.1"
-    },
-    "devDependencies": {
-        "grunt": "0.4.4"
     }
 }
