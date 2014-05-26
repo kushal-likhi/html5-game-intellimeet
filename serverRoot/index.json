@@ -1,0 +1,160 @@
+{
+    "files": [
+        {
+            "link": "/css/bootstrap/bootstrap.css.map",
+            "name": "bootstrap.css.map",
+            "type": "MAP",
+            "group": "css->bootstrap"
+        },
+        {
+            "link": "/css/bootstrap/bootstrap.min.css",
+            "name": "bootstrap.min.css",
+            "type": "CSS",
+            "group": "css->bootstrap"
+        },
+        {
+            "link": "/css/fonts/glyphicons-halflings-regular.eot",
+            "name": "glyphicons-halflings-regular.eot",
+            "type": "EOT",
+            "group": "css->fonts"
+        },
+        {
+            "link": "/css/fonts/glyphicons-halflings-regular.svg",
+            "name": "glyphicons-halflings-regular.svg",
+            "type": "SVG",
+            "group": "css->fonts"
+        },
+        {
+            "link": "/css/fonts/glyphicons-halflings-regular.ttf",
+            "name": "glyphicons-halflings-regular.ttf",
+            "type": "TTF",
+            "group": "css->fonts"
+        },
+        {
+            "link": "/css/fonts/glyphicons-halflings-regular.woff",
+            "name": "glyphicons-halflings-regular.woff",
+            "type": "WOFF",
+            "group": "css->fonts"
+        },
+        {
+            "link": "/demo/placeholder.txt",
+            "name": "placeholder.txt",
+            "type": "TXT",
+            "group": "demo"
+        },
+        {
+            "link": "/excercise/placeholder.txt",
+            "name": "placeholder.txt",
+            "type": "TXT",
+            "group": "excercise"
+        },
+        {
+            "link": "/images/HTML_Logo.png",
+            "name": "HTML_Logo.png",
+            "type": "PNG",
+            "group": "images"
+        },
+        {
+            "link": "/images/Html5_canvas_logo.png",
+            "name": "Html5_canvas_logo.png",
+            "type": "PNG",
+            "group": "images"
+        },
+        {
+            "link": "/images/MetroUI_HTML5.png",
+            "name": "MetroUI_HTML5.png",
+            "type": "PNG",
+            "group": "images"
+        },
+        {
+            "link": "/images/box3d_js.png",
+            "name": "box3d_js.png",
+            "type": "PNG",
+            "group": "images"
+        },
+        {
+            "link": "/images/icon-CSS.png",
+            "name": "icon-CSS.png",
+            "type": "PNG",
+            "group": "images"
+        },
+        {
+            "link": "/images/icon-HTML.png",
+            "name": "icon-HTML.png",
+            "type": "PNG",
+            "group": "images"
+        },
+        {
+            "link": "/images/icon-JS.png",
+            "name": "icon-JS.png",
+            "type": "PNG",
+            "group": "images"
+        },
+        {
+            "link": "/images/icon-OTHER.png",
+            "name": "icon-OTHER.png",
+            "type": "PNG",
+            "group": "images"
+        },
+        {
+            "link": "/images/imLogo.png",
+            "name": "imLogo.png",
+            "type": "PNG",
+            "group": "images"
+        },
+        {
+            "link": "/images/js-128.png",
+            "name": "js-128.png",
+            "type": "PNG",
+            "group": "images"
+        },
+        {
+            "link": "/images/logobox2d.png",
+            "name": "logobox2d.png",
+            "type": "PNG",
+            "group": "images"
+        },
+        {
+            "link": "/index.html",
+            "name": "index.html",
+            "type": "HTML",
+            "group": "->index.html"
+        },
+        {
+            "link": "/index.json",
+            "name": "index.json",
+            "type": "JSON",
+            "group": "->index.json"
+        },
+        {
+            "link": "/js/angular/angular.min.js",
+            "name": "angular.min.js",
+            "type": "JS",
+            "group": "js->angular"
+        },
+        {
+            "link": "/js/angular/angular.min.js.map",
+            "name": "angular.min.js.map",
+            "type": "MAP",
+            "group": "js->angular"
+        },
+        {
+            "link": "/js/bootstrap/bootstrap.min.js",
+            "name": "bootstrap.min.js",
+            "type": "JS",
+            "group": "js->bootstrap"
+        },
+        {
+            "link": "/js/jquery/jquery.min.js",
+            "name": "jquery.min.js",
+            "type": "JS",
+            "group": "js->jquery"
+        },
+        {
+            "link": "/js/jquery/jquery.min.map",
+            "name": "jquery.min.map",
+            "type": "MAP",
+            "group": "js->jquery"
+        }
+    ]
+}

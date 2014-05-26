@@ -1,6 +1,208 @@
 <html>
-<head><title>Home</title></head>
-<body>
-<h1>qwerrty</h1>
+
+<head>
+
+    <title>Home</title>
+
+    <link rel="stylesheet" href="css/bootstrap/bootstrap.min.css"/>
+
+    <script type="text/javascript" src="js/jquery/jquery.min.js"></script>
+    <script type="text/javascript" src="js/bootstrap/bootstrap.min.js"></script>
+    <script type="text/javascript" src="js/angular/angular.min.js"></script>
+
+    <script type="text/javascript">
+        function mainController($scope, $http) {
+            $scope.doFilter = function (type) {
+                $scope.activeFilter = type;
+                $scope.files = [];
+                angular.forEach($scope._files, function (file) {
+                    if (type == "ALL") $scope.files.push(file);
+                    else if (type == "OTHER") {
+                        if (file.type != "JS" && file.type != "CSS" && file.type != "HTML")  $scope.files.push(file);
+                    } else if (file.type == type) {
+                        $scope.files.push(file);
+                    }
+                });
+            };
+            $http.get("index.json").success(function (data) {
+                $scope._files = data.files;
+                $scope.doFilter("ALL");
+            });
+        }
+    </script>
+
+</head>
+
+<body ng-app style="background: #777;" ng-controller="mainController">
+
+<header>
+    <!--HEADER-->
+    <div class="navbar navbar-inverse navbar-fixed-top">
+        <div class="navbar-inner">
+            <div class="container-fluid">
+                <a class="navbar-brand" href="/" style="color:white"><img style="height: 45px; margin-top: -11px"
+                                                                          class="nav-brand-logo"
+                                                                          src="images/MetroUI_HTML5.png" alt=""/></a>
+                <a class="navbar-brand" href="/" style="color:white">HTML5 Canvas Game | <span
+                        class="navbar-brand-bright" style="color:#ffff00">Tutorial</span></a>
+
+                <div class="navbar-collapse collapse">
+                    <p class="navbar-text pull-right">
+                        IntelliMeet Session
+                    </p>
+                    <ul class="nav navbar-nav">
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!--HEADER ENDS-->
+</header>
+<div class="container">
+    <div class="row">
+        <div class="col-md-12">&nbsp;</div>
+    </div>
+    <div class="row">
+        <div class="col-md-12">&nbsp;</div>
+    </div>
+    <div class="row">
+        <div class="col-md-8">
+            <div style="background: white; min-height: 100%;padding: 10px;">
+                <h1>File Index</h1>
+                <hr/>
+                <div>
+                    <div class="pull-left">
+                        <button class="btn btn-link disabled" style="color: gray">Filter Files:</button>
+                    </div>
+                    <div class="pull-left">
+                        <div class="btn-group">
+                            <button type="button" ng-class="{active: activeFilter == 'ALL'}" class="btn btn-default"
+                                    ng-click="doFilter('ALL')">ALL
+                            </button>
+                            <button type="button" ng-class="{active: activeFilter == 'HTML'}" class="btn btn-default"
+                                    ng-click="doFilter('HTML')">HTML
+                            </button>
+                            <button type="button" ng-class="{active: activeFilter == 'JS'}" class="btn btn-default"
+                                    ng-click="doFilter('JS')">JS
+                            </button>
+                            <button type="button" ng-class="{active: activeFilter == 'CSS'}" class="btn btn-default"
+                                    ng-click="doFilter('CSS')">CSS
+                            </button>
+                            <button type="button" ng-class="{active: activeFilter == 'OTHER'}" class="btn btn-default"
+                                    ng-click="doFilter('OTHER')">OTHER
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-12">&nbsp;</div>
+                </div>
+                <div class="row">
+                    <div class="col-md-12">
+                        <table class="table table-striped table-hover" style="font-size: 12px">
+                            <thead>
+                            <th></th>
+                            <th>File Link</th>
+                            <th>Type</th>
+                            <th>Group</th>
+                            </thead>
+                            <tbody>
+                            <tr ng-repeat="file in files">
+                                <td><img src="images/icon-{{file.type}}.png" alt=""
+                                         onerror="this.src='images/icon-OTHER.png'"/></td>
+                                <td>
+                                    <a class="btn-link" style="color: black;" href="{{file.link}}" target="_blank">{{file.link}}</a>
+
+                                    <div class="modal fade bs-modal-lg-{{$index}}" tabindex="-1" role="dialog"
+                                         aria-labelledby="myLargeModalLabel{{$index}}" aria-hidden="true">
+                                        <div class="modal-dialog modal-lg">
+                                            <div class="modal-content">
+                                                <div class="modal-header">
+                                                    <button type="button" class="close" data-dismiss="modal"
+                                                            aria-hidden="true">&times;</button>
+                                                    <h4 class="modal-title">{{file.group}}->{{file.name}}</h4>
+                                                </div>
+                                                <div class="modal-body">
+
+                                                </div>
+                                                <div class="modal-footer">
+                                                    <a target="_blank" href="{{file.link}}" class="btn-link btn-sm"><i
+                                                            class="glyphicon glyphicon-new-window"></i> Open in new
+                                                        window</a>
+                                                    <button type="button" class="btn-primary btn-sm"><i
+                                                            class="glyphicon glyphicon-refresh"></i> Reload
+                                                    </button>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </td>
+                                <td>{{file.type}}</td>
+                                <td>{{file.group}}</td>
+                            </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+            <div style="height: 60px;">&nbsp;</div>
+        </div>
+        <div class="col-md-4">
+            <div style="background: white;padding: 10px;margin-top: 10px;">
+                <h5>HTML5 canvas game workshop app!</h5>
+                <hr/>
+                <div>
+                    <p>
+                        Click on the file links on the left to open them.
+                    </p>
+
+                    <p>
+                        Refer to the session and the presentation for description of the demos and exercises on the
+                        left.
+                    </p>
+
+
+                    <p>
+                        <strong>Few useful links:</strong>
+                    <ul>
+                        <li>Download <strong>presentation</strong>: <a href="/assets/presentation-html5-game.ppt">presentation-html5-game.ppt</a>
+                        </li>
+                        <li>Download <strong>this project</strong>: <a href="/assets/project.zip">project.zip</a></li>
+                        <li>Download <strong>answers</strong> for exercises: <a
+                                href="/assets/project.zip">answers.zip</a></li>
+                    </ul>
+                    </p>
+                    <hr/>
+                    <div class="row">
+                        <img src="images/Html5_canvas_logo.png" alt="" class="col-md-4"/>
+                        <img src="images/HTML_Logo.png" alt="" class="col-md-4"/>
+                        <img src="images/js-128.png" alt="" class="col-md-4"/>
+                    </div>
+                    <div class="row">
+                        <img src="images/logobox2d.png" alt="" class="col-md-3"/>
+                        <img src="images/box3d_js.png" alt="" class="col-md-6"/>
+                        <img src="images/imLogo.png" alt="" class="col-md-3"/>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<footer>
+    <div class="navbar navbar-inverse navbar-fixed-bottom">
+        <div class="navbar-inner">
+            <div class="container-fluid">
+                <div class="navbar-collapse collapse">
+                    <p class="navbar-text pull-right">
+                        &copy; Kushal Likhi | IntelliMeet - 2014
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+</footer>
+
+
 </body>
+
 </html>
