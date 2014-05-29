@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Demo 2 - Adding bodies</title>
+
+
+    <script src="/js/jquery/jquery.min.js"></script>
+    <script src="/js/box2d/Box2dWeb-2.1.a.3.min.js"></script>
+
+
+    <script type="text/javascript">
+        var physics = {
+            classes: {
+                World: function (canvasWidth, canvasHeight, doSleep) {
+                    //Every Box2D program begins with the creation of a b2World object.
+                    // b2World is the physics hub that manages memory, objects, and simulation.
+
+                    //We need gravity
+                    var gravity = new Box2D.Common.Math.b2Vec2(0, canvasWidth / 2);
+
+                    //Create the World object and return it.
+                    return new Box2D.Dynamics.b2World(gravity, doSleep);
+                },
+                BoxShapedBody: function (options) {
+                    //build options
+                    options = jQuery.extend(true, {
+                        height: null, //Height of box
+                        width: null, //Width of box
+                        restitution: null, //Bouncing effect
+                        density: null, //Mass
+                        friction: null, //friction on contact
+                        xCenterPos: null, //Center position X
+                        yCenterPos: null, //Center position Y
+                        rotation: null, //type of body
+                        linearDamping: null, //damping for linear motion
+                        angularDamping: null, //damping for angular motion
+                        gravityScale: null, // reaction to gravity
+                        fixedRotation: false, //rotate o not to rotate
+                        bullet: false, //is fast moving object?
+                        active: true, //is active in dynamics
+                        userData: {}, //custom data,
+                        type: Box2D.Dynamics.b2Body.b2_staticBody //type of body static, dynamic or kinematic
+                    }, options);
+
+                    //Validations
+                    if (!options.height) throw new Error("Please provide a valid height for BoxShapedBody.");
+                    if (!options.width) throw new Error("Please provide a valid width for BoxShapedBody.");
+                    if (options.xCenterPos == null) throw new Error("Please provide a valid x-center for BoxShapedBody.");
+                    if (options.yCenterPos == null) throw new Error("Please provide a valid y-center for BoxShapedBody.");
+
+                    //Define the shape of the body
+                    var bodyShapeFixture = new Box2D.Dynamics.b2FixtureDef();
+
+                    //Set the dimensions, add shape to the fixture
+                    bodyShapeFixture.shape = new Box2D.Collision.Shapes.b2PolygonShape();
+                    bodyShapeFixture.shape.SetAsBox(options.width / 2, options.height / 2);
+
+                    //Set bounce. Between 0-1 0=no bounce, 1=crazyBounce
+                    if (Boolean(options.restitution)) bodyShapeFixture.restitution = options.restitution;
+
+                    //Set density of object. 0 to positive number. density is directly proportional to mass.
+                    if (Boolean(options.density)) bodyShapeFixture.density = options.density;
+
+                    //Set friction. 0-1
+                    if (Boolean(options.friction)) bodyShapeFixture.friction = options.friction;
+
+                    //create the body
+                    var bodyDef = new Box2D.Dynamics.b2BodyDef();
+
+                    //Set initial position (Center point)
+                    bodyDef.position.Set(options.xCenterPos, options.yCenterPos);
+
+                    //Set initial rotation of object. In radians
+                    if (options.rotation) bodyDef.rotation = options.rotation;
+
+                    //set damping
+                    if (options.linearDamping) bodyDef.linearDamping = options.linearDamping;
+                    if (options.angularDamping) bodyDef.angularDamping = options.angularDamping;
+
+                    //set gravity scale. 0-infinity. Set 0 for no gravity effect. floating body.
+                    if (options.gravityScale) bodyDef.gravityScale = options.gravityScale;
+
+                    //set fixed rotation
+                    bodyDef.fixedRotation = options.fixedRotation;
+
+                    //set if bullet, fast moving
+                    bodyDef.bullet = options.bullet;
+
+                    //Set if active
+                    bodyDef.active = options.active;
+
+                    //Set custom user data
+                    bodyDef.userData = {
+                        type: "BoxShapedBody",
+                        creationOptions: options,
+                        timeCreated: new Date(),
+                        customData: options.userData || {}
+                    };
+
+                    //set type
+                    bodyDef.type = options.type;
+
+                    //Create body
+                    var body = physics.world.CreateBody(bodyDef);
+                    // Add fixture to body
+                    body.CreateFixture(bodyShapeFixture);
+
+                    //Return the body
+                    return body;
+                }
+            },
+            renderingEngine: {
+                debugDraw: true,
+                painterDraw: true,
+                painters: {
+
+                },
+                drawWorld: function () {
+                    //write drawing code here
+                },
+                init: function (timeStep, iteration) {
+                    //get canvas context
+                    physics.renderingEngine.ctx = physics.$canvas[0].getContext('2d');
+                    physics.renderingEngine.canvasDimensions = {
+                        height: physics.$canvas.height(),
+                        width: physics.$canvas.width()
+                    };
+                    physics.renderingEngine.timeStep = timeStep;
+                    physics.renderingEngine.iteration = iteration;
+
+                    //setup debugDraw if required
+                    if (physics.renderingEngine.debugDraw) {
+                        //setup debug draw
+                        var debugDraw = new Box2D.Dynamics.b2DebugDraw();
+                        debugDraw.SetSprite(physics.renderingEngine.ctx);
+                        debugDraw.SetFillAlpha(0.3);
+                        debugDraw.SetLineThickness(1.0);
+                        debugDraw.SetFlags(Box2D.Dynamics.b2DebugDraw.e_shapeBit | Box2D.Dynamics.b2DebugDraw.e_jointBit | Box2D.Dynamics.b2DebugDraw.e_aabbBit | Box2D.Dynamics.b2DebugDraw.e_centerOfMassBit);
+                        physics.world.SetDebugDraw(debugDraw);
+                    }
+                },
+                step: function () {
+                    physics.world.Step(physics.renderingEngine.timeStep, physics.renderingEngine.iteration, physics.renderingEngine.iteration);
+                    physics.renderingEngine.ctx.clearRect(0, 0, physics.renderingEngine.canvasDimensions.width, physics.renderingEngine.canvasDimensions.height);
+                    if (physics.renderingEngine.painterDraw) physics.renderingEngine.drawWorld();
+                    if (physics.renderingEngine.debugDraw) physics.world.DrawDebugData();
+                    setTimeout(physics.renderingEngine.step, physics.renderingEngine.timeStep);
+                },
+                start: function () {
+                    physics.renderingEngine.step();
+                }
+            },
+            init: function () {
+                jQuery(function () {
+                    physics.constructor();
+                });
+            },
+            constructor: function () {
+                //Set the canvas jQuery element
+                physics.$canvas = jQuery("#gameCanvas");
+
+                //Create the physics world
+                physics.world = new physics.classes.World(physics.$canvas.width(), physics.$canvas.height(), true);
+
+                //Create ground
+                new physics.classes.BoxShapedBody({
+                    height: 50, //Height of box
+                    width: 550, //Width of box
+                    restitution: 0.2, //Bouncing effect
+                    xCenterPos: 300, //Center position X
+                    yCenterPos: 375 //Center position Y
+                });
+
+                //start rendering
+                physics.renderingEngine.init(~~(1000 / 60), 1);
+                physics.renderingEngine.start();
+            }
+        };
+
+        //init
+        physics.init();
+    </script>
+</head>
+<body>
+<canvas style="background: gainsboro" id="gameCanvas" width="600" height="400"></canvas>
+</body>
+</html>

@@ -43,10 +43,10 @@
             "group": "demo->demo1-physics"
         },
         {
-            "link": "/demo/placeholder.txt",
-            "name": "placeholder.txt",
-            "type": "TXT",
-            "group": "demo"
+            "link": "/demo/demo2-physics/physics-adding-bodies.html",
+            "name": "physics-adding-bodies.html",
+            "type": "HTML",
+            "group": "demo->demo2-physics"
         },
         {
             "link": "/excercise/placeholder.txt",
