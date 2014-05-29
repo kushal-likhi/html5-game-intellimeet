@@ -265,33 +265,34 @@ var physics = {
             yCenterPos: physics.$canvas.height() - 25 //Center position Y
         });
 
-        for (var i = 0; i < 20; i++) {
-            //Create
-            new physics.classes.BoxShapedBody({
-                height: Math.random() * 40, //Height of box
-                width: Math.random() * 40, //Width of box
-                restitution: 0.2, //Bouncing effect
-                density: 1.0,
-                friction: 0.5,
-                xCenterPos: 200 + i, //Center position X
-                yCenterPos: 0 + (20 * i), //Center position Y
-                rotation: 0,
-                bullet: false,
-                type: Box2D.Dynamics.b2Body.b2_dynamicBody
-            });
-            //Create
-            new physics.classes.RoundShapedBody({
-                radius: Math.random() * 40, //Height of box
-                restitution: 0.2, //Bouncing effect
-                density: 1.0,
-                friction: 0.5,
-                xCenterPos: 200 + i, //Center position X
-                yCenterPos: 0 + (20 * i), //Center position Y
-                rotation: 0,
-                bullet: false,
-                type: Box2D.Dynamics.b2Body.b2_dynamicBody
-            });
-        }
+
+        ///////////CREATE BODIES
+        new physics.classes.BoxShapedBody({
+            height: 40, //Height of box
+            width: 40, //Width of box
+            restitution: 0.5, //Bouncing effect
+            density: 1.0,
+            friction: 0.5,
+            xCenterPos: 300, //Center position X
+            yCenterPos: 0, //Center position Y
+            rotation: 0,
+            bullet: false,
+            type: Box2D.Dynamics.b2Body.b2_dynamicBody
+        });
+        //Create
+        new physics.classes.RoundShapedBody({
+            radius: 20, //Height of box
+            restitution: 0.9, //Bouncing effect
+            density: 1.0,
+            friction: 0.5,
+            xCenterPos: 350, //Center position X
+            yCenterPos: 0, //Center position Y
+            rotation: 0,
+            bullet: false,
+            type: Box2D.Dynamics.b2Body.b2_dynamicBody
+        });
+        ///////////////
+
 
         //start rendering
         physics.renderingEngine.init(60, 10, 10);
