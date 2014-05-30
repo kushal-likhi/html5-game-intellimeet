@@ -67,6 +67,12 @@
             "group": "demo->demo3-physics"
         },
         {
+            "link": "/demo/demo3-rendering/rendering-full-rendering-2-with-pixi-sprites.html",
+            "name": "rendering-full-rendering-2-with-pixi-sprites.html",
+            "type": "HTML",
+            "group": "demo->demo3-rendering"
+        },
+        {
             "link": "/excercise/placeholder.txt",
             "name": "placeholder.txt",
             "type": "TXT",
@@ -123,6 +129,24 @@
         {
             "link": "/images/assets/gun-box.png",
             "name": "gun-box.png",
+            "type": "PNG",
+            "group": "images->assets"
+        },
+        {
+            "link": "/images/assets/lantern.png",
+            "name": "lantern.png",
+            "type": "PNG",
+            "group": "images->assets"
+        },
+        {
+            "link": "/images/assets/plant-fg.png",
+            "name": "plant-fg.png",
+            "type": "PNG",
+            "group": "images->assets"
+        },
+        {
+            "link": "/images/assets/platform.png",
+            "name": "platform.png",
             "type": "PNG",
             "group": "images->assets"
         },

@@ -202,6 +202,10 @@ var physics = {
             return body;
         }
     },
+    preLoadAssets: [
+        "/spines/dragon/dragonBones.json",
+        "/spines/dragon/dragonBonesData.json"
+    ],
     renderingEngine: {
         debugDraw: true,
         painterDraw: true,
@@ -211,37 +215,50 @@ var physics = {
                 //If in cache, return from cache
                 if (Boolean(physics.renderingEngine.painters.cache[id])) return physics.renderingEngine.painters.cache[id];
 
-                //Not in cache. Created for the first time.
-                var texture = PIXI.Texture.fromImage(rendererConfig.imagePath);
-                // create a new Sprite using the texture
-                var bodyRenderCtx = new PIXI.Sprite(texture);
+                var bodyRenderCtx;
 
-                // center the sprites anchor point
-                bodyRenderCtx.anchor.x = 0.5;
-                bodyRenderCtx.anchor.y = 0.5;
+                if (Boolean(rendererConfig.spine)) {
+                    //Setup Spine and save to cache
 
-                if (rendererConfig.order == null || typeof rendererConfig.order == 'undefined')
+                    bodyRenderCtx = new PIXI.Spine(rendererConfig.spine.bones);
+
+                    bodyRenderCtx.state.setAnimationByName(rendererConfig.spine.animation, true);
+
                     physics.renderingEngine.painters.pixiStage.addChild(bodyRenderCtx);
-                else {
-                    //Decide Order and add child
-                    if (physics.renderingEngine.painters.pixiStage.children.length - 1 >= rendererConfig.order) {
-                        physics.renderingEngine.painters.pixiStage.addChildAt(bodyRenderCtx, rendererConfig.order);
-                    } else {
-                        //Add some dummy children
-                        var numberOfChildrenToAdd = rendererConfig.order - (physics.renderingEngine.painters.pixiStage.children.length - 1);
-                        for (var i = 0; i < numberOfChildrenToAdd; i++) {
-                            var obj = new PIXI.Sprite(texture);
-                            obj.visible = false;
-                            physics.renderingEngine.painters.pixiStage.addChild(obj);
+                } else {
+                    //Not in cache. Created for the first time.
+                    var texture = PIXI.Texture.fromImage(rendererConfig.imagePath);
+                    // create a new Sprite using the texture
+                    bodyRenderCtx = new PIXI.Sprite(texture);
+
+                    // center the sprites anchor point
+                    bodyRenderCtx.anchor.x = 0.5;
+                    bodyRenderCtx.anchor.y = 0.5;
+
+                    if (rendererConfig.order == null || typeof rendererConfig.order == 'undefined')
+                        physics.renderingEngine.painters.pixiStage.addChild(bodyRenderCtx);
+                    else {
+                        //Decide Order and add child
+                        if (physics.renderingEngine.painters.pixiStage.children.length - 1 >= rendererConfig.order) {
+                            physics.renderingEngine.painters.pixiStage.addChildAt(bodyRenderCtx, rendererConfig.order);
+                        } else {
+                            //Add some dummy children
+                            var numberOfChildrenToAdd = rendererConfig.order - (physics.renderingEngine.painters.pixiStage.children.length - 1);
+                            for (var i = 0; i < numberOfChildrenToAdd; i++) {
+                                var obj = new PIXI.Sprite(texture);
+                                obj.visible = false;
+                                physics.renderingEngine.painters.pixiStage.addChild(obj);
+                            }
+                            physics.renderingEngine.painters.pixiStage.addChildAt(bodyRenderCtx, rendererConfig.order);
                         }
-                        physics.renderingEngine.painters.pixiStage.addChildAt(bodyRenderCtx, rendererConfig.order);
                     }
+                    //set height/width
+                    bodyRenderCtx.height = height;
+                    bodyRenderCtx.width = width;
                 }
 
+                //add in cache
                 physics.renderingEngine.painters.cache[id] = bodyRenderCtx;
-
-                bodyRenderCtx.height = height;
-                bodyRenderCtx.width = width;
 
                 return bodyRenderCtx;
             },
@@ -327,12 +344,11 @@ var physics = {
                 var debugDraw = new Box2D.Dynamics.b2DebugDraw();
                 debugDraw.SetSprite(context);
                 debugDraw.SetDrawScale(jQuery("#debugDrawCanvas").height() / physics.heightOfWorldInMeter);
-                debugDraw.SetFillAlpha(0.5);
+                debugDraw.SetFillAlpha(0.3);
                 debugDraw.SetLineThickness(1.0);
                 debugDraw.SetFlags(Box2D.Dynamics.b2DebugDraw.e_shapeBit | Box2D.Dynamics.b2DebugDraw.e_jointBit | Box2D.Dynamics.b2DebugDraw.e_);
                 physics.world.SetDebugDraw(debugDraw);
             }
-
 
         },
         step: function () {
@@ -345,11 +361,21 @@ var physics = {
         },
         start: function () {
             physics.renderingEngine.step();
+        },
+        loadAssets: function (callback) {
+            // create a new loader
+            var loader = new PIXI.AssetLoader(physics.preLoadAssets);
+
+            // use callback
+            loader.onComplete = callback;
+
+            //begin load
+            loader.load();
         }
     },
     init: function () {
         jQuery(function () {
-            physics.constructor();
+            physics.renderingEngine.loadAssets(physics.constructor);
         });
     },
     constructor: function () {
@@ -370,7 +396,7 @@ var physics = {
             xCenterPos: physics.$canvas.width() / 2, //Center position X
             yCenterPos: physics.$canvas.height() / 2, //Center position Y
             renderer: {
-                imagePath: "/images/assets/bg-forest.jpg",
+                imagePath: "/images/assets/yellow-forest.jpg",
                 order: 0
             }
         });
@@ -381,8 +407,8 @@ var physics = {
             new physics.classes.BoxShapedBody({
                 height: Math.random() * 80, //Height of box
                 width: Math.random() * 80, //Width of box
-                restitution: 0.4, //Bouncing effect
-                density: 2.0,
+                restitution: 0.2, //Bouncing effect
+                density: 10.0,
                 friction: 0.5,
                 xCenterPos: Math.random() * physics.$canvas.width(), //Center position X
                 yCenterPos: 0, //Center position Y
@@ -390,7 +416,7 @@ var physics = {
                 bullet: false,
                 type: Box2D.Dynamics.b2Body.b2_dynamicBody,
                 renderer: {
-                    imagePath: "/images/assets/gun-box.png",
+                    imagePath: "/images/assets/hay.jpg",
                     order: 1
                 }
             });
@@ -406,11 +432,11 @@ var physics = {
                 bullet: false,
                 type: Box2D.Dynamics.b2Body.b2_dynamicBody,
                 renderer: {
-                    imagePath: "/images/assets/football.png",
+                    imagePath: "/images/assets/lantern.png",
                     order: 1
                 }
             });
-            if (numObjects < 40) {
+            if (numObjects < 30) {
                 numObjects += 2;
                 setTimeout(drawObjects, 500);
             }
@@ -421,22 +447,58 @@ var physics = {
         //Create ground
         new physics.classes.BoxShapedBody({
             height: 80, //Height of ground in pixels, will be converted to meters in class
-            width: physics.$canvas.width() - (physics.$canvas.width() / 100) * 30, //Width of box
+            width: physics.$canvas.width(), //Width of box
             restitution: 0.2, //Bouncing effect
             density: 1.0,
             friction: 0.5,
             xCenterPos: physics.$canvas.width() / 2, //Center position X
             yCenterPos: physics.$canvas.height() - 40, //Center position Y
             renderer: {
-                imagePath: "/images/assets/ground.png",
+                imagePath: "/images/assets/platform.png",
                 order: 2,
                 scaleY: 1.1
+            }
+        });
+
+        //Create plant
+        new physics.classes.BoxShapedBody({
+            height: 140, //Height of ground in pixels, will be converted to meters in class
+            width: 80, //Width of box
+            active: false,
+            xCenterPos: physics.$canvas.width() / 2, //Center position X
+            yCenterPos: physics.$canvas.height() - 40, //Center position Y
+            renderer: {
+                imagePath: "/images/assets/plant-fg.png",
+                order: 2
+            }
+        });
+
+        //Create Dragon
+        new physics.classes.BoxShapedBody({
+            height: 140,
+            width: 200,
+            active: true,
+            density:1.0,
+            type: Box2D.Dynamics.b2Body.b2_dynamicBody,
+            //set gravity custom todo
+            //density, restitution, friction
+            xCenterPos: physics.$canvas.width() / 5, //Center position X
+            yCenterPos: physics.$canvas.height() / 2, //Center position Y
+            renderer: {
+                spine: {
+                    bones: "/spines/dragon/dragonBonesData.json",
+                    animation: "flying"
+                },
+                order: 2,
+                scaleX: 0.3,
+                scaleY: 0.3
             }
         });
 
         //start rendering
         physics.renderingEngine.init(60, 10, 10);
         physics.renderingEngine.start();
+
     }
 };
 
