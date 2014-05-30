@@ -55,6 +55,12 @@
             "group": "demo->demo2-physics"
         },
         {
+            "link": "/demo/demo2-rendering/rendering-full-rendering.html",
+            "name": "rendering-full-rendering.html",
+            "type": "HTML",
+            "group": "demo->demo2-rendering"
+        },
+        {
             "link": "/demo/demo3-physics/physics-adding-multiple-bodies.html",
             "name": "physics-adding-multiple-bodies.html",
             "type": "HTML",
@@ -83,6 +89,12 @@
             "name": "MetroUI_HTML5.png",
             "type": "PNG",
             "group": "images"
+        },
+        {
+            "link": "/images/assets/football.png",
+            "name": "football.png",
+            "type": "PNG",
+            "group": "images->assets"
         },
         {
             "link": "/images/box3d_js.png",
@@ -569,6 +581,12 @@
             "name": "jquery.min.map",
             "type": "MAP",
             "group": "js->jquery"
+        },
+        {
+            "link": "/js/pixi/pixi.js",
+            "name": "pixi.js",
+            "type": "JS",
+            "group": "js->pixi"
         },
         {
             "link": "/js/prototype/prototype-1.6.0.2.js",
