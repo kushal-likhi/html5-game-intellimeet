@@ -91,9 +91,45 @@
             "group": "images"
         },
         {
+            "link": "/images/assets/ball.png",
+            "name": "ball.png",
+            "type": "PNG",
+            "group": "images->assets"
+        },
+        {
+            "link": "/images/assets/bg-forest.jpg",
+            "name": "bg-forest.jpg",
+            "type": "JPG",
+            "group": "images->assets"
+        },
+        {
+            "link": "/images/assets/blue-box.png",
+            "name": "blue-box.png",
+            "type": "PNG",
+            "group": "images->assets"
+        },
+        {
             "link": "/images/assets/football.png",
             "name": "football.png",
             "type": "PNG",
+            "group": "images->assets"
+        },
+        {
+            "link": "/images/assets/ground.png",
+            "name": "ground.png",
+            "type": "PNG",
+            "group": "images->assets"
+        },
+        {
+            "link": "/images/assets/gun-box.png",
+            "name": "gun-box.png",
+            "type": "PNG",
+            "group": "images->assets"
+        },
+        {
+            "link": "/images/assets/yellow-forest.jpg",
+            "name": "yellow-forest.jpg",
+            "type": "JPG",
             "group": "images->assets"
         },
         {

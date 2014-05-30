@@ -229,11 +229,12 @@ var physics = {
                     } else {
                         //Add some dummy children
                         var numberOfChildrenToAdd = rendererConfig.order - (physics.renderingEngine.painters.pixiStage.children.length - 1);
-                        var obj = new PIXI.DisplayObject();
-                        obj.visible = false;
                         for (var i = 0; i < numberOfChildrenToAdd; i++) {
-                            physics.renderingEngine.painters.pixiStage.addChild(bodyRenderCtx);
+                            var obj = new PIXI.Sprite(texture);
+                            obj.visible = false;
+                            physics.renderingEngine.painters.pixiStage.addChild(obj);
                         }
+                        physics.renderingEngine.painters.pixiStage.addChildAt(bodyRenderCtx, rendererConfig.order);
                     }
                 }
 
@@ -241,10 +242,6 @@ var physics = {
 
                 bodyRenderCtx.height = height;
                 bodyRenderCtx.width = width;
-
-                //Set scale
-                if (rendererConfig.scaleX) bodyRenderCtx.scale.x *= rendererConfig.scaleX;
-                if (rendererConfig.scaleY) bodyRenderCtx.scale.y *= rendererConfig.scaleY;
 
                 return bodyRenderCtx;
             },
@@ -276,6 +273,9 @@ var physics = {
                 bodyRendererCtx.position.y = yPos;
                 bodyRendererCtx.rotation = rotation;
 
+                //Set scale
+                if (data.renderer.scaleX) bodyRendererCtx.scale.x = data.renderer.scaleX;
+                if (data.renderer.scaleY) bodyRendererCtx.scale.y = data.renderer.scaleY;
 
                 //Render pixi stage
                 physics.renderingEngine.painters.pixiRenderer.render(physics.renderingEngine.painters.pixiStage);
@@ -362,6 +362,62 @@ var physics = {
         //Create the physics world
         physics.world = new physics.classes.World(true);
 
+        //Create background
+        new physics.classes.BoxShapedBody({
+            height: physics.$canvas.height(),
+            width: physics.$canvas.width(),
+            active: false,
+            xCenterPos: physics.$canvas.width() / 2, //Center position X
+            yCenterPos: physics.$canvas.height() / 2, //Center position Y
+            renderer: {
+                imagePath: "/images/assets/bg-forest.jpg",
+                order: 0
+            }
+        });
+
+        var numObjects = 0;
+
+        function drawObjects() {
+            new physics.classes.BoxShapedBody({
+                height: Math.random() * 80, //Height of box
+                width: Math.random() * 80, //Width of box
+                restitution: 0.4, //Bouncing effect
+                density: 2.0,
+                friction: 0.5,
+                xCenterPos: Math.random() * physics.$canvas.width(), //Center position X
+                yCenterPos: 0, //Center position Y
+                rotation: Math.random() * 2,
+                bullet: false,
+                type: Box2D.Dynamics.b2Body.b2_dynamicBody,
+                renderer: {
+                    imagePath: "/images/assets/gun-box.png",
+                    order: 1
+                }
+            });
+            //Create
+            new physics.classes.RoundShapedBody({
+                radius: Math.random() * 20, //Height of box
+                restitution: 0.6, //Bouncing effect
+                density: 1.0,
+                friction: 0.5,
+                xCenterPos: Math.random() * physics.$canvas.width(), //Center position X
+                yCenterPos: 0, //Center position Y
+                rotation: 0,
+                bullet: false,
+                type: Box2D.Dynamics.b2Body.b2_dynamicBody,
+                renderer: {
+                    imagePath: "/images/assets/football.png",
+                    order: 1
+                }
+            });
+            if (numObjects < 40) {
+                numObjects += 2;
+                setTimeout(drawObjects, 500);
+            }
+        }
+
+        setTimeout(drawObjects, 500);
+
         //Create ground
         new physics.classes.BoxShapedBody({
             height: 80, //Height of ground in pixels, will be converted to meters in class
@@ -373,46 +429,10 @@ var physics = {
             yCenterPos: physics.$canvas.height() - 40, //Center position Y
             renderer: {
                 imagePath: "/images/assets/ground.png",
-                order: 1,
-                scaleY: 1.25
+                order: 2,
+                scaleY: 1.1
             }
         });
-
-        for (var i = 0; i < 20; i++) {
-            //Create
-            new physics.classes.BoxShapedBody({
-                height: Math.random() * 40, //Height of box
-                width: Math.random() * 40, //Width of box
-                restitution: 0.2, //Bouncing effect
-                density: 1.0,
-                friction: 0.5,
-                xCenterPos: 200 + i, //Center position X
-                yCenterPos: 0 + (20 * i), //Center position Y
-                rotation: 0,
-                bullet: false,
-                type: Box2D.Dynamics.b2Body.b2_dynamicBody,
-                renderer: {
-                    imagePath: "/images/assets/gun-box.png",
-                    order: 2
-                }
-            });
-            //Create
-            new physics.classes.RoundShapedBody({
-                radius: Math.random() * 40, //Height of box
-                restitution: 0.2, //Bouncing effect
-                density: 1.0,
-                friction: 0.5,
-                xCenterPos: 200 + i, //Center position X
-                yCenterPos: 0 + (20 * i), //Center position Y
-                rotation: 0,
-                bullet: false,
-                type: Box2D.Dynamics.b2Body.b2_dynamicBody,
-                renderer: {
-                    imagePath: "/images/assets/football.png",
-                    order: 2
-                }
-            });
-        }
 
         //start rendering
         physics.renderingEngine.init(60, 10, 10);
@@ -444,8 +464,7 @@ physics.init();
         position: absolute;
         right: 10px;
         top: 10px;
-        border: 1px solid gray;
-        background: #eceaff;
+        z-index: 10;
     }
 </style>
 </head>
