@@ -16,7 +16,7 @@ $> npm start
 
 
 ##How to install NodeJS##
-* Download system specific binary from <<>>
+* Download system specific binary from http://nodejs.org/download/
 * Extract it in the `/opt/<extracted folder name>` folder, or any other folder of your choice.
 * Put `/opt/<extracted folder name>` in your path. (Same way as we install grails, etc.)
 * Run `node` and it should launch the Node REPL. All set.
