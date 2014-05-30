@@ -73,6 +73,18 @@
             "group": "demo->demo3-rendering"
         },
         {
+            "link": "/demo/demo4-rendering/rendering-full-rendering-with-pixi-sprites-moving.html",
+            "name": "rendering-full-rendering-with-pixi-sprites-moving.html",
+            "type": "HTML",
+            "group": "demo->demo4-rendering"
+        },
+        {
+            "link": "/demo/demoFinal-theGame/game-like-angry-birds.html",
+            "name": "game-like-angry-birds.html",
+            "type": "HTML",
+            "group": "demo->demoFinal-theGame"
+        },
+        {
             "link": "/excercise/placeholder.txt",
             "name": "placeholder.txt",
             "type": "TXT",
@@ -130,6 +142,12 @@
             "link": "/images/assets/gun-box.png",
             "name": "gun-box.png",
             "type": "PNG",
+            "group": "images->assets"
+        },
+        {
+            "link": "/images/assets/hay.jpg",
+            "name": "hay.jpg",
+            "type": "JPG",
             "group": "images->assets"
         },
         {
@@ -653,6 +671,24 @@
             "name": "prototype-1.6.0.2.js",
             "type": "JS",
             "group": "js->prototype"
+        },
+        {
+            "link": "/spines/dragon/dragonBones.json",
+            "name": "dragonBones.json",
+            "type": "JSON",
+            "group": "spines->dragon"
+        },
+        {
+            "link": "/spines/dragon/dragonBones.png",
+            "name": "dragonBones.png",
+            "type": "PNG",
+            "group": "spines->dragon"
+        },
+        {
+            "link": "/spines/dragon/dragonBonesData.json",
+            "name": "dragonBonesData.json",
+            "type": "JSON",
+            "group": "spines->dragon"
         }
     ]
 }
