@@ -425,7 +425,7 @@ var physics = {
             });
             //Create
             new physics.classes.RoundShapedBody({
-                radius: Math.random() * 20, //Height of box
+                radius: Math.random() * 30, //Height of box
                 restitution: 1.0, //Bouncing effect
                 density: 0.8,
                 friction: 0.7,
@@ -439,21 +439,7 @@ var physics = {
                     order: 1
                 }
             });
-            new physics.classes.RoundShapedBody({
-                radius: Math.random() * 20, //Height of box
-                restitution: 1.0, //Bouncing effect
-                density: 0.8,
-                friction: 0.7,
-                xCenterPos: Math.random() * physics.$canvas.width(), //Center position X
-                yCenterPos: 0, //Center position Y
-                rotation: 0,
-                bullet: false,
-                type: Box2D.Dynamics.b2Body.b2_dynamicBody,
-                renderer: {
-                    imagePath: "/images/assets/lantern.png",
-                    order: 1
-                }
-            });
+
             if (numObjects < 30) {
                 numObjects += 2;
                 setTimeout(drawObjects, 500);
