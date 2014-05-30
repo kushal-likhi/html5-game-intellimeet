@@ -1,0 +1,401 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Demo 2 - Adding bodies</title>
+
+
+<script src="/js/jquery/jquery.min.js"></script>
+<script src="/js/pixi/pixi.js"></script>
+<script src="/js/box2d/Box2dWeb-2.1.a.3.min.js"></script>
+
+
+<script type="text/javascript">
+var physics = {
+    heightOfWorldInMeter: 10,
+    SCALE: null,
+    classes: {
+        World: function (doSleep) {
+            //Every Box2D program begins with the creation of a b2World object.
+            // b2World is the physics hub that manages memory, objects, and simulation.
+
+            //We need gravity
+            var gravity = new Box2D.Common.Math.b2Vec2(0, 9.8);
+
+            //Create the World object and return it.
+            return new Box2D.Dynamics.b2World(gravity, doSleep);
+        },
+        BoxShapedBody: function (options) {
+            //build options
+            options = jQuery.extend(true, {
+                height: null, //Height of box
+                width: null, //Width of box
+                restitution: null, //Bouncing effect
+                density: null, //Mass
+                friction: null, //friction on contact
+                xCenterPos: null, //Center position X
+                yCenterPos: null, //Center position Y
+                rotation: null, //type of body
+                linearDamping: null, //damping for linear motion
+                angularDamping: null, //damping for angular motion
+                gravityScale: null, // reaction to gravity
+                fixedRotation: false, //rotate o not to rotate
+                bullet: false, //is fast moving object?
+                active: true, //is active in dynamics
+                userData: {}, //custom data,
+                renderer: null,
+                type: Box2D.Dynamics.b2Body.b2_staticBody //type of body static, dynamic or kinematic
+            }, options);
+
+            //Validations
+            if (!options.height) throw new Error("Please provide a valid height for BoxShapedBody.");
+            if (!options.width) throw new Error("Please provide a valid width for BoxShapedBody.");
+            if (options.xCenterPos === null) throw new Error("Please provide a valid x-center for BoxShapedBody.");
+            if (options.yCenterPos === null) throw new Error("Please provide a valid y-center for BoxShapedBody.");
+
+            //Define the shape of the body
+            var bodyShapeFixture = new Box2D.Dynamics.b2FixtureDef();
+
+            //Set the dimensions, add shape to the fixture
+            bodyShapeFixture.shape = new Box2D.Collision.Shapes.b2PolygonShape();
+            bodyShapeFixture.shape.SetAsBox((options.width / 2) / physics.SCALE, (options.height / 2) / physics.SCALE);
+
+            //Set bounce. Between 0-1 0=no bounce, 1=crazyBounce
+            if (options.restitution !== null) bodyShapeFixture.restitution = options.restitution;
+
+            //Set density of object. 0 to positive number. density is directly proportional to mass.
+            if (options.density !== null) bodyShapeFixture.density = options.density;
+
+            //Set friction. 0-1
+            if (options.friction !== null) bodyShapeFixture.friction = options.friction;
+
+            //create the body
+            var bodyDef = new Box2D.Dynamics.b2BodyDef();
+
+            //Set initial position (Center point)
+            bodyDef.position.Set(options.xCenterPos / physics.SCALE, options.yCenterPos / physics.SCALE);
+
+            //Set initial rotation of object. In radians
+            if (options.rotation !== null) bodyDef.angle = options.rotation;
+
+            //set damping
+            if (options.linearDamping !== null) bodyDef.linearDamping = options.linearDamping;
+            if (options.angularDamping !== null) bodyDef.angularDamping = options.angularDamping;
+
+            //set gravity scale. 0-infinity. Set 0 for no gravity effect. floating body.
+            if (options.gravityScale !== null) bodyDef.gravityScale = options.gravityScale;
+
+            //set fixed rotation
+            bodyDef.fixedRotation = options.fixedRotation;
+
+            //set if bullet, fast moving
+            bodyDef.bullet = options.bullet;
+
+            //Set if active
+            bodyDef.active = options.active;
+
+            //Set custom user data
+            bodyDef.userData = {
+                id: +new Date() + (Math.random() * 10000000) + (Math.random() * 100000),
+                type: "BoxShapedBody",
+                creationOptions: options,
+                timeCreated: new Date(),
+                customData: options.userData || {},
+                renderer: options.renderer
+            };
+
+            //set type
+            bodyDef.type = options.type;
+
+            //Create body
+            var body = physics.world.CreateBody(bodyDef);
+            // Add fixture to body
+            body.CreateFixture(bodyShapeFixture);
+
+            //Return the body
+            return body;
+        },
+        RoundShapedBody: function (options) {
+            //build options
+            options = jQuery.extend(true, {
+                radius: null, //Height of box
+                restitution: null, //Bouncing effect
+                density: null, //Mass
+                friction: null, //friction on contact
+                xCenterPos: null, //Center position X
+                yCenterPos: null, //Center position Y
+                rotation: null, //type of body
+                linearDamping: null, //damping for linear motion
+                angularDamping: null, //damping for angular motion
+                gravityScale: null, // reaction to gravity
+                fixedRotation: false, //rotate o not to rotate
+                bullet: false, //is fast moving object?
+                active: true, //is active in dynamics
+                userData: {}, //custom data,
+                renderer: null,
+                type: Box2D.Dynamics.b2Body.b2_staticBody //type of body static, dynamic or kinematic
+            }, options);
+
+            //Validations
+            if (!options.radius) throw new Error("Please provide a valid height for RoundShapedBody.");
+            if (options.xCenterPos === null) throw new Error("Please provide a valid x-center for RoundShapedBody.");
+            if (options.yCenterPos === null) throw new Error("Please provide a valid y-center for RoundShapedBody.");
+
+            //Define the shape of the body
+            var bodyShapeFixture = new Box2D.Dynamics.b2FixtureDef();
+
+            //Set the dimensions, add shape to the fixture
+            bodyShapeFixture.shape = new Box2D.Collision.Shapes.b2CircleShape(options.radius / physics.SCALE);
+
+            //Set bounce. Between 0-1 0=no bounce, 1=crazyBounce
+            if (options.restitution !== null) bodyShapeFixture.restitution = options.restitution;
+
+            //Set density of object. 0 to positive number. density is directly proportional to mass.
+            if (options.density !== null) bodyShapeFixture.density = options.density;
+
+            //Set friction. 0-1
+            if (options.friction !== null) bodyShapeFixture.friction = options.friction;
+
+            //create the body
+            var bodyDef = new Box2D.Dynamics.b2BodyDef();
+
+            //Set initial position (Center point)
+            bodyDef.position.Set(options.xCenterPos / physics.SCALE, options.yCenterPos / physics.SCALE);
+
+            //Set initial rotation of object. In radians
+            if (options.rotation !== null) bodyDef.angle = options.rotation;
+
+            //set damping
+            if (options.linearDamping !== null) bodyDef.linearDamping = options.linearDamping;
+            if (options.angularDamping !== null) bodyDef.angularDamping = options.angularDamping;
+
+            //set gravity scale. 0-infinity. Set 0 for no gravity effect. floating body.
+            if (options.gravityScale !== null) bodyDef.gravityScale = options.gravityScale;
+
+            //set fixed rotation
+            bodyDef.fixedRotation = options.fixedRotation;
+
+            //set if bullet, fast moving
+            bodyDef.bullet = options.bullet;
+
+            //Set if active
+            bodyDef.active = options.active;
+
+            //Set custom user data
+            bodyDef.userData = {
+                id: +new Date() + (Math.random() * 10000000) + (Math.random() * 100000),
+                type: "RoundShapedBody",
+                creationOptions: options,
+                timeCreated: new Date(),
+                customData: options.userData || {},
+                renderer: options.renderer
+            };
+
+            //set type
+            bodyDef.type = options.type;
+
+            //Create body
+            var body = physics.world.CreateBody(bodyDef);
+            // Add fixture to body
+            body.CreateFixture(bodyShapeFixture);
+
+            //Return the body
+            return body;
+        }
+    },
+    renderingEngine: {
+        debugDraw: false,
+        painterDraw: true,
+        painters: {
+            cache: {},
+            _createOrGetRenderingInstance: function (id, rendererConfig) {
+                //If in cache, return from cache
+                if (Boolean(physics.renderingEngine.painters.cache[id])) return physics.renderingEngine.painters.cache[id];
+
+                //Not in cache. Created for the first time.
+                var texture = PIXI.Texture.fromImage(rendererConfig.imagePath);
+                // create a new Sprite using the texture
+                var bodyRenderCtx = new PIXI.Sprite(texture);
+
+                // center the sprites anchor point
+                bodyRenderCtx.anchor.x = 0.5;
+                bodyRenderCtx.anchor.y = 0.5;
+
+                physics.renderingEngine.painters.pixiStage.addChild(bodyRenderCtx);
+
+                physics.renderingEngine.painters.cache[id] = bodyRenderCtx;
+
+                return bodyRenderCtx;
+            },
+            drawJoint: function (joint) {
+                //Todo in Advanced session
+            },
+            drawShape: function (body) {
+                //Get user data
+                var data = body.GetUserData();
+                //Remove all unwanted/un-rendered shapes
+                if (!data || !data.renderer) return;
+
+                //Get context for rendering. In our case, PiXi Object.
+                var bodyRendererCtx = physics.renderingEngine.painters._createOrGetRenderingInstance(data.id, data.renderer);
+
+                //Get positional params
+                var xPos = body.GetPosition().x * physics.SCALE;
+                var yPos = body.GetPosition().y * physics.SCALE;
+                var rotation = body.GetAngle();
+
+                //add these values to the rendered view
+                bodyRendererCtx.position.x = xPos;
+                bodyRendererCtx.position.y = yPos;
+                bodyRendererCtx.rotation = rotation;
+
+                switch (body.GetFixtureList().GetShape().GetType()) {
+                    case Box2D.Collision.Shapes.b2Shape.e_circleShape:
+                        var radius = body.GetFixtureList().GetShape().GetRadius() * physics.SCALE;
+                        bodyRendererCtx.height = radius;
+                        bodyRendererCtx.width = radius;
+                        break;
+                    case Box2D.Collision.Shapes.b2Shape.e_polygonShape:
+                        var height = data.creationOptions.height;
+                        var width = data.creationOptions.width;
+                        bodyRendererCtx.height = height;
+                        bodyRendererCtx.width = width;
+                        break;
+                }
+
+                //Render pixi stage
+                physics.renderingEngine.painters.pixiRenderer.render(physics.renderingEngine.painters.pixiStage);
+            }
+        },
+        drawWorld: function () {
+            //return;
+            for (var joint = physics.world.m_jointList; joint; joint = joint.m_next) {
+                physics.renderingEngine.painters.drawJoint(joint);
+            }
+            for (var body = physics.world.m_bodyList; body; body = body.m_next) {
+                physics.renderingEngine.painters.drawShape(body);
+            }
+        },
+        init: function (fps, iteration, angularIterations) {
+            //get canvas context
+            physics.renderingEngine.ctx = physics.$canvas[0].getContext('2d');
+            physics.renderingEngine.canvasDimensions = {
+                height: physics.$canvas.height(),
+                width: physics.$canvas.width()
+            };
+            physics.renderingEngine.fps = fps;
+            physics.renderingEngine.iteration = iteration;
+            physics.renderingEngine.angularIterations = angularIterations;
+
+            //setup pixi if enabled
+            if (physics.renderingEngine.painterDraw) {
+                // create an new instance of a pixi stage
+                physics.renderingEngine.painters.pixiStage = new PIXI.Stage(0xDCDCDC);
+                // create a renderer instance
+                physics.renderingEngine.painters.pixiRenderer = new PIXI.CanvasRenderer(physics.$canvas.width(), physics.$canvas.height(), physics.$canvas[0], true);
+            }
+
+            //setup debugDraw if required
+            if (physics.renderingEngine.debugDraw) {
+
+                //setup debug draw
+                var debugDraw = new Box2D.Dynamics.b2DebugDraw();
+                debugDraw.SetSprite(physics.renderingEngine.ctx);
+                debugDraw.SetDrawScale(2);
+                debugDraw.SetFillAlpha(0.3);
+                debugDraw.SetLineThickness(1.0);
+                debugDraw.SetFlags(Box2D.Dynamics.b2DebugDraw.e_shapeBit | Box2D.Dynamics.b2DebugDraw.e_jointBit | Box2D.Dynamics.b2DebugDraw.e_);
+                physics.world.SetDebugDraw(debugDraw);
+            }
+
+
+        },
+        step: function () {
+            physics.world.Step(1 / physics.renderingEngine.fps, physics.renderingEngine.iteration, physics.renderingEngine.angularIterations);
+            //physics.renderingEngine.ctx.clearRect(0, 0, physics.renderingEngine.canvasDimensions.width, physics.renderingEngine.canvasDimensions.height);
+            if (physics.renderingEngine.painterDraw) physics.renderingEngine.drawWorld();
+            if (physics.renderingEngine.debugDraw) physics.world.DrawDebugData();
+            physics.world.ClearForces();
+            setTimeout(physics.renderingEngine.step, ~~(1000 / physics.renderingEngine.fps));
+        },
+        start: function () {
+            physics.renderingEngine.step();
+        }
+    },
+    init: function () {
+        jQuery(function () {
+            physics.constructor();
+        });
+    },
+    constructor: function () {
+        //Set the canvas jQuery element
+        physics.$canvas = jQuery("#gameCanvas");
+
+        //Get scale value
+        physics.SCALE = physics.$canvas.height() / physics.heightOfWorldInMeter;
+
+        //Create the physics world
+        physics.world = new physics.classes.World(true);
+
+        //Create ground
+        new physics.classes.BoxShapedBody({
+            height: 50, //Height of ground in pixels, will be converted to meters in class
+            width: physics.$canvas.width() - 50, //Width of box
+            restitution: 0.2, //Bouncing effect
+            density: 1.0,
+            friction: 0.5,
+            xCenterPos: physics.$canvas.width() / 2, //Center position X
+            yCenterPos: physics.$canvas.height() - 25 //Center position Y
+            /* renderer: {
+
+             }*/
+        });
+
+        for (var i = 0; i < 20; i++) {
+            //Create
+            new physics.classes.BoxShapedBody({
+                height: Math.random() * 40, //Height of box
+                width: Math.random() * 40, //Width of box
+                restitution: 0.2, //Bouncing effect
+                density: 1.0,
+                friction: 0.5,
+                xCenterPos: 200 + i, //Center position X
+                yCenterPos: 0 + (20 * i), //Center position Y
+                rotation: 0,
+                bullet: false,
+                type: Box2D.Dynamics.b2Body.b2_dynamicBody/*,
+                 renderer: {
+
+                 }*/
+            });
+            //Create
+            new physics.classes.RoundShapedBody({
+                radius: Math.random() * 40, //Height of box
+                restitution: 0.2, //Bouncing effect
+                density: 1.0,
+                friction: 0.5,
+                xCenterPos: 200 + i, //Center position X
+                yCenterPos: 0 + (20 * i), //Center position Y
+                rotation: 0,
+                bullet: false,
+                type: Box2D.Dynamics.b2Body.b2_dynamicBody,
+                renderer: {
+                    imagePath: "/images/assets/football.png"
+                }
+            });
+        }
+
+        //start rendering
+        physics.renderingEngine.init(60, 10, 10);
+        physics.renderingEngine.start();
+    }
+};
+
+//init
+physics.init();
+</script>
+
+</head>
+<body>
+<canvas style="background: #dcdcdc" id="gameCanvas" width="960" height="480"></canvas>
+</body>
+</html>

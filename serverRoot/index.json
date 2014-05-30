@@ -43,10 +43,22 @@
             "group": "demo->demo1-physics"
         },
         {
+            "link": "/demo/demo1-rendering/rendering-adding-custom-renderer.html",
+            "name": "rendering-adding-custom-renderer.html",
+            "type": "HTML",
+            "group": "demo->demo1-rendering"
+        },
+        {
             "link": "/demo/demo2-physics/physics-adding-bodies.html",
             "name": "physics-adding-bodies.html",
             "type": "HTML",
             "group": "demo->demo2-physics"
+        },
+        {
+            "link": "/demo/demo3-physics/physics-adding-multiple-bodies.html",
+            "name": "physics-adding-multiple-bodies.html",
+            "type": "HTML",
+            "group": "demo->demo3-physics"
         },
         {
             "link": "/excercise/placeholder.txt",
@@ -149,6 +161,18 @@
             "name": "bootstrap.min.js",
             "type": "JS",
             "group": "js->bootstrap"
+        },
+        {
+            "link": "/js/box2d/Box2dWeb-2.1.a.3.js",
+            "name": "Box2dWeb-2.1.a.3.js",
+            "type": "JS",
+            "group": "js->box2d"
+        },
+        {
+            "link": "/js/box2d/Box2dWeb-2.1.a.3.min.js",
+            "name": "Box2dWeb-2.1.a.3.min.js",
+            "type": "JS",
+            "group": "js->box2d"
         },
         {
             "link": "/js/box2d/collision/ClipVertex.js",
